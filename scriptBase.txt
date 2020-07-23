@@ -1,0 +1,122 @@
+drop table secUser;
+
+create table secUser (
+usuCodigo int AUTO_INCREMENT primary  key,
+usuLogin varchar(20),
+usuClave varchar(20),
+usuNombre varchar(40),
+usuApellido varchar(40),
+usuEmail varchar(60),
+usuEstado varchar(02),
+usuFechaCrea date    
+);
+
+drop table producto;
+
+create table producto (
+prdCodigo int AUTO_INCREMENT primary  key,
+prdNombre varchar(80),
+prdCodBarrasQr varchar(80),
+prdPrecioCompra float,
+prdPrecioVenta float,
+prdMarca varchar(40),
+prdEstado varchar(02),
+prdImagen blob,
+prdExistencia float,
+prdFechaCrea date,
+usuario int not null
+);
+ALTER TABLE producto ADD CONSTRAINT fk_producto_usuario FOREIGN KEY (usuario) REFERENCES secUser (usuCodigo);
+
+CREATE TABLE invAjuste(
+ajuNumero bigint AUTO_INCREMENT PRIMARY KEY NOT NULL,
+ajuFecha date NOT NULL,
+ajuTipo int NOT NULL,
+ajuEstado int NOT NULL,
+usuario int NOT NULL,
+equipo varchar(30) NOT NULL
+);
+ALTER TABLE invAjuste ADD CONSTRAINT fk_ajuste_usuario FOREIGN KEY (usuario) REFERENCES secUser (usuCodigo);
+
+CREATE TABLE invAjusteDet(
+adeNumero int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+adeproducto int NOT NULL,
+adeExistencia int NOT NULL,
+adeCantReal int NOT NULL,
+adePrecio int NOT NULL,
+ajuNumero bigint NOT NULL
+);
+ALTER TABLE invAjusteDet ADD CONSTRAINT fk_ajusteDet_producto FOREIGN KEY (adeproducto) REFERENCES producto (prdCodigo);
+ALTER TABLE invAjusteDet ADD CONSTRAINT fk_ajusteDet_ajuste FOREIGN KEY (ajuNumero) REFERENCES invAjuste (ajuNumero);
+
+
+
+insert into secuser(usulogin,usuclave,usunombre,usuapellido,usuemail,usuestado,usufechaCrea)
+values('oportero','oportero','Onofre','Portero','osalaspec@gmail.com',1,'20200713')
+
+	
+
+
+
+use scanealo;
+DELIMITER //
+create PROCEDURE sp_AjusteInventario(
+    _usuCodigo int,
+    _usuLogin varchar(20),
+    _usuClave varchar(20),
+    _usuNombre varchar(40),
+    _usuApellido varchar(40),
+    _usuEmail varchar(60),
+    _usuEstado varchar(02),
+    _usuFechaCrea date,
+	accion varchar(10))
+BEGIN
+	DECLARE _valorCal float;
+    
+    case accion
+    	when 'consultar' THEN
+             case _usuCodigo
+                 when 0 THEN
+                     select * FROM secuser;
+                 ELSE
+                     select * from secuser where usuCodigo=_usuCodigo;
+             end case;
+    	when 'insertar' THEN
+             insert into secuser(usuCodigo,usuLogin,usuClave,usuNombre,usuApellido,usuEmail,usuEstado,usuFechaCrea)
+             values(_usuCodigo,_usuLogin,_usuClave,_usuNombre,_usuApellido,_usuEmail,_usuEstado,_usuFechaCrea);
+    	when 'actualizar' THEN
+             update secuser 
+             set usuLogin    =_usuLogin,
+                 usuClave    =_usuClave,
+                 usuNombre   =_usuNombre,
+                 usuApellido =_usuApellido,
+                 usuEmail    =_usuEmail,
+                 usuEstado   =_usuEstado,
+                 usuFechaCrea=_usuFechaCrea
+             where  usuCodigo=_usuCodigo;
+    	when 'eliminar' THEN
+            delete from secuser where usuCodigo=_usuCodigo;
+    end CASE;
+END
+//
+
+
+
+create PROCEDURE sp_AjusteInventario(
+    _ajuNumero bigint,
+	_ajuFecha date,
+	_ajuTipo int,
+    _ajuEstado int,
+    _usuario int,
+    _equipo varchar(30))
+BEGIN
+	DECLARE _valorCal float;
+    
+    
+END
+
+
+
+
+
+usuCodigo,usuLogin,usuClave,usuNombre,usuApellido,usuEmail,usuEstado,usuFechaCrea
