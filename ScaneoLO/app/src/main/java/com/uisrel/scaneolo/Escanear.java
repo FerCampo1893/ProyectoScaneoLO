@@ -77,10 +77,10 @@ public class Escanear extends AppCompatActivity {
         }
     };
 
-/*
+
 ///////////////////////////////////////////////////
 public void getData(View V){
-    String ws = "http://192.168.1.3/scanealo/post_producto.php";
+    String ws = "http://192.168.1.13:8080/scanealo/post_producto.php";
 
     //Habilitar permisos
     StrictMode.ThreadPolicy politica = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -135,7 +135,7 @@ public void getData(View V){
 }
 
 
-
+/*
 
     public void consumirServicio(View v){
         String cedula= tvCodigogetText().toString();
